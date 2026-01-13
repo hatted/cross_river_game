@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,14 +13,16 @@
             padding: 0;
             min-height: 100vh;
         }
+
         .container {
             max-width: 1000px;
             margin: 36px auto 36px auto;
             background: #fff;
             border-radius: 18px;
-            box-shadow: 0 6px 32px 0 rgba(80,120,180,0.13), 0 1.5px 6px 0 rgba(80,120,180,0.09);
+            box-shadow: 0 6px 32px 0 rgba(80, 120, 180, 0.13), 0 1.5px 6px 0 rgba(80, 120, 180, 0.09);
             padding: 36px 32px 32px 32px;
         }
+
         h1 {
             text-align: center;
             font-size: 2.5em;
@@ -27,11 +30,13 @@
             margin-bottom: 0.2em;
             letter-spacing: 1px;
         }
+
         h2 {
             text-align: center;
             color: #4b86b4;
             margin-top: 0.5em;
         }
+
         .game-area {
             display: flex;
             justify-content: space-between;
@@ -40,6 +45,7 @@
             gap: 24px;
             position: relative;
         }
+
         .river {
             flex: 1;
             height: 54px;
@@ -50,6 +56,7 @@
             box-shadow: 0 2px 12px #b3e6b3a0;
             z-index: 1;
         }
+
         .boat {
             width: 130px;
             height: 54px;
@@ -66,6 +73,7 @@
             border: 2.5px solid #a67c52;
             z-index: 2;
         }
+
         .bank {
             width: 200px;
             min-height: 220px;
@@ -78,12 +86,14 @@
             padding: 18px 10px 12px 10px;
             box-shadow: 0 2px 8px #e2c79980;
         }
+
         .bank h3 {
             margin: 0 0 10px 0;
             color: #a67c52;
             font-size: 1.2em;
             letter-spacing: 0.5px;
         }
+
         .passenger {
             margin: 7px 0;
             padding: 10px 18px;
@@ -95,16 +105,19 @@
             font-size: 1.08em;
             box-shadow: 0 1px 4px #b3c6e055;
         }
+
         .passenger:hover {
             background: #e6f2ff;
             border-color: #3399ff;
             box-shadow: 0 2px 8px #3399ff33;
         }
+
         .passenger.selected {
             background: #cce5ff;
             border-color: #3399ff;
             box-shadow: 0 2px 8px #3399ff55;
         }
+
         .boat {
             width: 130px;
             height: 54px;
@@ -120,6 +133,7 @@
             box-shadow: 0 2px 8px #8d552455;
             border: 2.5px solid #a67c52;
         }
+
         .boat-passenger {
             margin: 0 6px;
             padding: 6px 12px;
@@ -129,10 +143,12 @@
             font-size: 1.05em;
             box-shadow: 0 1px 4px #bbb3;
         }
+
         .controls {
             text-align: center;
             margin: 28px 0 18px 0;
         }
+
         button {
             padding: 12px 30px;
             font-size: 1.08em;
@@ -147,15 +163,18 @@
             font-weight: 500;
             letter-spacing: 0.5px;
         }
+
         button:hover:not(:disabled) {
             background: linear-gradient(90deg, #4b86b4 80%, #3399ff 100%);
             box-shadow: 0 2px 8px #3399ff55;
         }
+
         button:disabled {
             background: #bbb;
             cursor: not-allowed;
             box-shadow: none;
         }
+
         select {
             padding: 7px 18px;
             border-radius: 7px;
@@ -166,10 +185,12 @@
             color: #2a4d69;
             transition: border 0.18s;
         }
+
         select:focus {
             border-color: #3399ff;
             outline: none;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -179,17 +200,21 @@
             overflow: hidden;
             box-shadow: 0 1px 6px #b3c6e033;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #dbeafe;
             padding: 10px 6px;
             text-align: center;
             font-size: 1.04em;
         }
+
         th {
             background: linear-gradient(90deg, #e6f2ff 80%, #dbeafe 100%);
             color: #2a4d69;
             font-weight: 600;
         }
+
         .step-count {
             font-weight: bold;
             font-size: 1.18em;
@@ -197,6 +222,7 @@
             margin-top: 10px;
             text-align: center;
         }
+
         .rules {
             background: linear-gradient(90deg, #f9f9f9 80%, #e6f2ff 100%);
             border: 1.5px solid #b3c6e0;
@@ -205,15 +231,35 @@
             margin-bottom: 28px;
             box-shadow: 0 1px 6px #b3c6e033;
         }
+
         @media (max-width: 900px) {
-            .container { padding: 16px 2vw; }
-            .game-area { flex-direction: column; align-items: stretch; gap: 18px; }
-            .bank { width: 100%; min-height: 120px; }
-            .river { margin: 0 0 18px 0; height: 36px; }
-            .boat { top: -44px; }
+            .container {
+                padding: 16px 2vw;
+            }
+
+            .game-area {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 18px;
+            }
+
+            .bank {
+                width: 100%;
+                min-height: 120px;
+            }
+
+            .river {
+                margin: 0 0 18px 0;
+                height: 36px;
+            }
+
+            .boat {
+                top: -44px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Cross River Game</h1>
@@ -248,7 +294,12 @@
         <div class="step-count">Total Steps: <span id="step-count">0</span></div>
         <table>
             <thead>
-                <tr><th>Step</th><th>Left Bank</th><th>Boat</th><th>Right Bank</th></tr>
+                <tr>
+                    <th>Step</th>
+                    <th>Left Bank</th>
+                    <th>Boat</th>
+                    <th>Right Bank</th>
+                </tr>
             </thead>
             <tbody id="steps-table">
             </tbody>
@@ -280,7 +331,7 @@
                     </ul>
                 `,
                 winCondition: state => state.right.length === 4,
-                checkRules: function(state, resetGame) {
+                checkRules: function (state, resetGame) {
                     // Chicken eats worm
                     if (state.boatOnLeft) {
                         if (state.right.includes('Chicken') && state.right.includes('Worm') && !state.right.includes('Farmer')) {
@@ -312,7 +363,7 @@
                     }
                     return false;
                 },
-                canSelect: function(name, bank, state) {
+                canSelect: function (name, bank, state) {
                     if (!state.boatOnLeft && bank === 'left') return false;
                     if (state.boatOnLeft && bank === 'right') return false;
                     if (state.boat.length >= 2) return false;
@@ -351,7 +402,7 @@
                     </ul>
                 `,
                 winCondition: state => state.right.length === 6,
-                checkRules: function(state, resetGame) {
+                checkRules: function (state, resetGame) {
                     // Check both banks for forbidden combinations after every move
                     let left = state.left, right = state.right;
                     function check(bank) {
@@ -388,7 +439,7 @@
                     }
                     return false;
                 },
-                canSelect: function(name, bank, state) {
+                canSelect: function (name, bank, state) {
                     if (!state.boatOnLeft && bank === 'left') return false;
                     if (state.boatOnLeft && bank === 'right') return false;
                     if (state.boat.length >= 2) return false;
@@ -428,7 +479,7 @@
                     </ul>
                 `,
                 winCondition: state => state.right.length === 8,
-                checkRules: function(state, resetGame) {
+                checkRules: function (state, resetGame) {
                     // Check both banks for forbidden combinations after every move
                     let left = state.left, right = state.right;
                     function check(bank) {
@@ -465,7 +516,7 @@
                     }
                     return false;
                 },
-                canSelect: function(name, bank, state) {
+                canSelect: function (name, bank, state) {
                     if (!state.boatOnLeft && bank === 'left') return false;
                     if (state.boatOnLeft && bank === 'right') return false;
                     if (state.boat.length >= 2) return false;
@@ -557,7 +608,7 @@
                 const leftStr = step.left.map(withEmoji).join(', ');
                 const boatStr = step.boat.map(withEmoji).join(', ');
                 const rightStr = step.right.map(withEmoji).join(', ');
-                tr.innerHTML = `<td>${i+1}</td><td>${leftStr}</td><td>${boatStr}</td><td>${rightStr}</td>`;
+                tr.innerHTML = `<td>${i + 1}</td><td>${leftStr}</td><td>${boatStr}</td><td>${rightStr}</td>`;
                 table.appendChild(tr);
             });
         }
@@ -620,7 +671,7 @@
 
         document.getElementById('move-btn').onclick = moveBoat;
         document.getElementById('reset-btn').onclick = resetGame;
-        document.getElementById('level-select').onchange = function() {
+        document.getElementById('level-select').onchange = function () {
             currentLevel = parseInt(this.value);
             resetGame();
         };
@@ -629,4 +680,5 @@
         render();
     </script>
 </body>
+
 </html>
