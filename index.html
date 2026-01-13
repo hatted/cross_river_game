@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross River Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 36px auto 36px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 6px 32px 0 rgba(80,120,180,0.13), 0 1.5px 6px 0 rgba(80,120,180,0.09);
+            padding: 36px 32px 32px 32px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #2a4d69;
+            margin-bottom: 0.2em;
+            letter-spacing: 1px;
+        }
+        h2 {
+            text-align: center;
+            color: #4b86b4;
+            margin-top: 0.5em;
+        }
+        .game-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin: 40px 0 32px 0;
+            gap: 24px;
+            position: relative;
+        }
+        .river {
+            flex: 1;
+            height: 54px;
+            background: linear-gradient(90deg, #aee9f7 60%, #b3e6b3 100%);
+            border-radius: 16px;
+            margin: 0 18px;
+            position: relative;
+            box-shadow: 0 2px 12px #b3e6b3a0;
+            z-index: 1;
+        }
+        .boat {
+            width: 130px;
+            height: 54px;
+            background: linear-gradient(90deg, #8d5524 80%, #c68642 100%);
+            border-radius: 0 0 70px 70px / 0 0 44px 44px;
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px #8d552455;
+            border: 2.5px solid #a67c52;
+            z-index: 2;
+        }
+        .bank {
+            width: 200px;
+            min-height: 220px;
+            background: linear-gradient(135deg, #f7e9c6 60%, #e2c799 100%);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 18px 10px 12px 10px;
+            box-shadow: 0 2px 8px #e2c79980;
+        }
+        .bank h3 {
+            margin: 0 0 10px 0;
+            color: #a67c52;
+            font-size: 1.2em;
+            letter-spacing: 0.5px;
+        }
+        .passenger {
+            margin: 7px 0;
+            padding: 10px 18px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #f7f7f7 80%, #e6f2ff 100%);
+            border: 1.5px solid #b3c6e0;
+            cursor: pointer;
+            transition: background 0.18s, box-shadow 0.18s, border 0.18s;
+            font-size: 1.08em;
+            box-shadow: 0 1px 4px #b3c6e055;
+        }
+        .passenger:hover {
+            background: #e6f2ff;
+            border-color: #3399ff;
+            box-shadow: 0 2px 8px #3399ff33;
+        }
+        .passenger.selected {
+            background: #cce5ff;
+            border-color: #3399ff;
+            box-shadow: 0 2px 8px #3399ff55;
+        }
+        .boat {
+            width: 130px;
+            height: 54px;
+            background: linear-gradient(90deg, #8d5524 80%, #c68642 100%);
+            border-radius: 0 0 70px 70px / 0 0 44px 44px;
+            position: absolute;
+            bottom: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px #8d552455;
+            border: 2.5px solid #a67c52;
+        }
+        .boat-passenger {
+            margin: 0 6px;
+            padding: 6px 12px;
+            background: #fffbe6;
+            border-radius: 6px;
+            border: 1.5px solid #bbb;
+            font-size: 1.05em;
+            box-shadow: 0 1px 4px #bbb3;
+        }
+        .controls {
+            text-align: center;
+            margin: 28px 0 18px 0;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 1.08em;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(90deg, #3399ff 80%, #4b86b4 100%);
+            color: #fff;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: background 0.18s, box-shadow 0.18s;
+            box-shadow: 0 1px 4px #3399ff33;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        button:hover:not(:disabled) {
+            background: linear-gradient(90deg, #4b86b4 80%, #3399ff 100%);
+            box-shadow: 0 2px 8px #3399ff55;
+        }
+        button:disabled {
+            background: #bbb;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        select {
+            padding: 7px 18px;
+            border-radius: 7px;
+            border: 1.5px solid #b3c6e0;
+            font-size: 1em;
+            margin-left: 8px;
+            background: #f7f7f7;
+            color: #2a4d69;
+            transition: border 0.18s;
+        }
+        select:focus {
+            border-color: #3399ff;
+            outline: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 28px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 6px #b3c6e033;
+        }
+        th, td {
+            border: 1px solid #dbeafe;
+            padding: 10px 6px;
+            text-align: center;
+            font-size: 1.04em;
+        }
+        th {
+            background: linear-gradient(90deg, #e6f2ff 80%, #dbeafe 100%);
+            color: #2a4d69;
+            font-weight: 600;
+        }
+        .step-count {
+            font-weight: bold;
+            font-size: 1.18em;
+            color: #2a4d69;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .rules {
+            background: linear-gradient(90deg, #f9f9f9 80%, #e6f2ff 100%);
+            border: 1.5px solid #b3c6e0;
+            border-radius: 10px;
+            padding: 22px 18px 18px 18px;
+            margin-bottom: 28px;
+            box-shadow: 0 1px 6px #b3c6e033;
+        }
+        @media (max-width: 900px) {
+            .container { padding: 16px 2vw; }
+            .game-area { flex-direction: column; align-items: stretch; gap: 18px; }
+            .bank { width: 100%; min-height: 120px; }
+            .river { margin: 0 0 18px 0; height: 36px; }
+            .boat { top: -44px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cross River Game</h1>
+        <div class="controls" style="margin-bottom: 16px;">
+            <label for="level-select"><b>Select Level:</b></label>
+            <select id="level-select">
+                <option value="1">Level 1</option>
+                <option value="2">Level 2</option>
+                <option value="3">Level 3</option>
+            </select>
+        </div>
+        <div class="rules" id="rules-box"></div>
+        <div class="game-area">
+            <div class="bank" id="left-bank">
+                <h3>Left Bank</h3>
+                <div id="left-passengers"></div>
+            </div>
+            <div class="river">
+                <div class="boat" id="boat">
+                    <div id="boat-passengers"></div>
+                </div>
+            </div>
+            <div class="bank" id="right-bank">
+                <h3>Right Bank</h3>
+                <div id="right-passengers"></div>
+            </div>
+        </div>
+        <div class="controls">
+            <button id="move-btn">Move Boat</button>
+            <button id="reset-btn">Reset</button>
+        </div>
+        <div class="step-count">Total Steps: <span id="step-count">0</span></div>
+        <table>
+            <thead>
+                <tr><th>Step</th><th>Left Bank</th><th>Boat</th><th>Right Bank</th></tr>
+            </thead>
+            <tbody id="steps-table">
+            </tbody>
+        </table>
+    </div>
+    <script>
+        // Level data and rules
+        const LEVELS = {
+            1: {
+                name: 'Level 1',
+                initial: {
+                    left: ['Farmer', 'Fox', 'Chicken', 'Worm'],
+                    right: [],
+                    boat: [],
+                    boatOnLeft: true,
+                    steps: [],
+                    stepCount: 0
+                },
+                rulesHtml: `
+                    <h2>Level 1 Rules</h2>
+                    <ul>
+                        <li>Help all passengers cross the river using the boat.</li>
+                        <li>The boat can only take <b>2 passengers</b> at a time.</li>
+                        <li>Only <b>adults</b> (Farmer) can ride the boat.</li>
+                        <li>Animals and children cannot ride the boat alone.</li>
+                        <li>The farmer can only take <b>one thing at a time</b>.</li>
+                        <li>If the farmer leaves the chicken and the worm unattended, the chicken will eat the worm.</li>
+                        <li>If the farmer leaves the fox and the chicken unattended, the fox will eat the chicken.</li>
+                    </ul>
+                `,
+                winCondition: state => state.right.length === 4,
+                checkRules: function(state, resetGame) {
+                    // Chicken eats worm
+                    if (state.boatOnLeft) {
+                        if (state.right.includes('Chicken') && state.right.includes('Worm') && !state.right.includes('Farmer')) {
+                            alert('The chicken ate the worm! You lose.');
+                            resetGame();
+                            return true;
+                        }
+                        if (state.right.includes('Fox') && state.right.includes('Chicken') && !state.right.includes('Farmer')) {
+                            alert('The fox ate the chicken! You lose.');
+                            resetGame();
+                            return true;
+                        }
+                    } else {
+                        if (state.left.includes('Chicken') && state.left.includes('Worm') && !state.left.includes('Farmer')) {
+                            alert('The chicken ate the worm! You lose.');
+                            resetGame();
+                            return true;
+                        }
+                        if (state.left.includes('Fox') && state.left.includes('Chicken') && !state.left.includes('Farmer')) {
+                            alert('The fox ate the chicken! You lose.');
+                            resetGame();
+                            return true;
+                        }
+                    }
+                    // Win condition
+                    if (this.winCondition(state)) {
+                        alert('Congratulations! All passengers crossed the river.');
+                        return true;
+                    }
+                    return false;
+                },
+                canSelect: function(name, bank, state) {
+                    if (!state.boatOnLeft && bank === 'left') return false;
+                    if (state.boatOnLeft && bank === 'right') return false;
+                    if (state.boat.length >= 2) return false;
+                    if (!state[bank].includes(name)) return false;
+                    // Only Farmer can drive
+                    if (name !== 'Farmer' && !state.boat.includes('Farmer')) return false;
+                    // Farmer can only take one thing at a time
+                    if (state.boat.includes('Farmer') && state.boat.length === 2) return false;
+                    // Only Farmer can be alone in boat
+                    if (name !== 'Farmer' && state.boat.length === 1 && state.boat[0] !== 'Farmer') return false;
+                    return true;
+                },
+                mustHave: ['Farmer']
+            },
+            2: {
+                name: 'Level 2',
+                initial: {
+                    left: ['Father', 'Mother', 'Son', 'Daughter', 'Farmer', 'Wolf'],
+                    right: [],
+                    boat: [],
+                    boatOnLeft: true,
+                    steps: [],
+                    stepCount: 0
+                },
+                rulesHtml: `
+                    <h2>Level 2 Rules</h2>
+                    <ul>
+                        <li>Help all passengers cross the river using the boat.</li>
+                        <li>The boat can only take <b>2 passengers</b> at a time.</li>
+                        <li>Only <b>adults</b> (Father, Mother, Farmer) can ride the boat.</li>
+                        <li>Animals and children cannot ride the boat.</li>
+                        <li>The Farmer can only take one thing at a time.</li>
+                        <li>The Father cannot be left alone with the Daughter without the Mother present.</li>
+                        <li>The Mother cannot be left alone with the Son without the Father present.</li>
+                        <li>The Wolf cannot be left alone with the Son or Daughter or Father or Mother without the Farmer present.</li>
+                    </ul>
+                `,
+                winCondition: state => state.right.length === 6,
+                checkRules: function(state, resetGame) {
+                    // Check both banks for forbidden combinations after every move
+                    let left = state.left, right = state.right;
+                    function check(bank) {
+                        // Father & Daughter without Mother
+                        if (bank.includes('Father') && bank.includes('Daughter') && !bank.includes('Mother')) {
+                            alert('Father and Daughter are on the bank without Mother! You lose.');
+                            resetGame();
+                            return true;
+                        }
+                        // Mother & Son without Father
+                        if (bank.includes('Mother') && bank.includes('Son') && !bank.includes('Father')) {
+                            alert('Mother and Son are on the bank without Father! You lose.');
+                            resetGame();
+                            return true;
+                        }
+                        // Wolf with any family member without Farmer
+                        const family = ['Father', 'Mother', 'Son', 'Daughter'];
+                        if (bank.includes('Wolf') && !bank.includes('Farmer')) {
+                            for (let f of family) {
+                                if (bank.includes(f)) {
+                                    alert('Wolf cannot be left alone with family without Farmer! You lose.');
+                                    resetGame();
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    }
+                    if (check(left) || check(right)) return true;
+                    // Win condition
+                    if (this.winCondition(state)) {
+                        alert('Congratulations! All passengers crossed the river.');
+                        return true;
+                    }
+                    return false;
+                },
+                canSelect: function(name, bank, state) {
+                    if (!state.boatOnLeft && bank === 'left') return false;
+                    if (state.boatOnLeft && bank === 'right') return false;
+                    if (state.boat.length >= 2) return false;
+                    if (!state[bank].includes(name)) return false;
+                    // Only adults can drive: Father, Mother, Farmer
+                    const adults = ['Father', 'Mother', 'Farmer'];
+                    if (!adults.includes(name) && !state.boat.some(p => adults.includes(p))) return false;
+                    // Farmer can only take one thing at a time
+                    if (state.boat.includes('Farmer') && state.boat.length === 2) return false;
+                    // Only adult can be alone in boat
+                    if (!adults.includes(name) && state.boat.length === 1 && !adults.includes(state.boat[0])) return false;
+                    return true;
+                },
+                mustHave: ['Father', 'Mother', 'Farmer']
+            },
+            3: {
+                name: 'Level 3',
+                initial: {
+                    left: ['Father', 'Mother', 'Adam', 'Ben', 'Clara', 'Diana', 'Farmer', 'Wolf'],
+                    right: [],
+                    boat: [],
+                    boatOnLeft: true,
+                    steps: [],
+                    stepCount: 0
+                },
+                rulesHtml: `
+                    <h2>Level 3 Rules</h2>
+                    <ul>
+                        <li>Help all passengers cross the river using the boat.</li>
+                        <li>The boat can only take <b>2 passengers</b> at a time.</li>
+                        <li>Only <b>adults</b> (Father, Mother, Farmer) can ride the boat.</li>
+                        <li>Animals and children cannot ride the boat.</li>
+                        <li>The Farmer can only take one thing at a time.</li>
+                        <li>The Father cannot be left with any daughter (Clara or Diana) without the Mother present.</li>
+                        <li>The Mother cannot be left with any son (Adam or Ben) without the Father present.</li>
+                        <li>The Wolf cannot be left alone with Adam, Ben, Clara, Diana, Father, or Mother without the Farmer present.</li>
+                    </ul>
+                `,
+                winCondition: state => state.right.length === 8,
+                checkRules: function(state, resetGame) {
+                    // Check both banks for forbidden combinations after every move
+                    let left = state.left, right = state.right;
+                    function check(bank) {
+                        // Father with any daughter (Clara or Diana) without Mother
+                        if ((bank.includes('Father') && (bank.includes('Clara') || bank.includes('Diana'))) && !bank.includes('Mother')) {
+                            alert('Father and a daughter (Clara or Diana) are on the bank without Mother! You lose.');
+                            resetGame();
+                            return true;
+                        }
+                        // Mother with any son (Adam or Ben) without Father
+                        if ((bank.includes('Mother') && (bank.includes('Adam') || bank.includes('Ben'))) && !bank.includes('Father')) {
+                            alert('Mother and a son (Adam or Ben) are on the bank without Father! You lose.');
+                            resetGame();
+                            return true;
+                        }
+                        // Wolf with any family member without Farmer
+                        const family = ['Father', 'Mother', 'Adam', 'Ben', 'Clara', 'Diana'];
+                        if (bank.includes('Wolf') && !bank.includes('Farmer')) {
+                            for (let f of family) {
+                                if (bank.includes(f)) {
+                                    alert('Wolf cannot be left alone with family without Farmer! You lose.');
+                                    resetGame();
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    }
+                    if (check(left) || check(right)) return true;
+                    // Win condition
+                    if (this.winCondition(state)) {
+                        alert('Congratulations! All passengers crossed the river.');
+                        return true;
+                    }
+                    return false;
+                },
+                canSelect: function(name, bank, state) {
+                    if (!state.boatOnLeft && bank === 'left') return false;
+                    if (state.boatOnLeft && bank === 'right') return false;
+                    if (state.boat.length >= 2) return false;
+                    if (!state[bank].includes(name)) return false;
+                    // Only adults can drive: Father, Mother, Farmer
+                    const adults = ['Father', 'Mother', 'Farmer'];
+                    if (!adults.includes(name) && !state.boat.some(p => adults.includes(p))) return false;
+                    // Farmer can only take one thing at a time
+                    if (state.boat.includes('Farmer') && state.boat.length === 2) return false;
+                    // Only adult can be alone in boat
+                    if (!adults.includes(name) && state.boat.length === 1 && !adults.includes(state.boat[0])) return false;
+                    return true;
+                },
+                mustHave: ['Father', 'Mother', 'Farmer']
+            }
+        };
+
+        let currentLevel = 1;
+        let state = JSON.parse(JSON.stringify(LEVELS[currentLevel].initial));
+
+        function renderRules() {
+            document.getElementById('rules-box').innerHTML = LEVELS[currentLevel].rulesHtml;
+        }
+
+        // Emoji mapping for all characters
+        const EMOJIS = {
+            'Farmer': '👨‍🌾',
+            'Father': '👨',
+            'Mother': '👩',
+            'Son': '🧒',
+            'Daughter': '👧',
+            'Adam': '🧑',
+            'Ben': '🧒',
+            'Clara': '👧',
+            'Diana': '👧',
+            'Wolf': '🐺',
+            'Fox': '🦊',
+            'Chicken': '🐔',
+            'Worm': '🪱',
+        };
+
+        function withEmoji(name) {
+            return (EMOJIS[name] ? EMOJIS[name] + ' ' : '') + name;
+        }
+
+        function render() {
+            renderRules();
+            // Render banks
+            const leftDiv = document.getElementById('left-passengers');
+            const rightDiv = document.getElementById('right-passengers');
+            leftDiv.innerHTML = '';
+            rightDiv.innerHTML = '';
+            state.left.forEach(p => {
+                const el = document.createElement('div');
+                el.className = 'passenger';
+                el.textContent = withEmoji(p);
+                el.onclick = () => selectPassenger(p, 'left');
+                if (state.boat.includes(p)) el.classList.add('selected');
+                leftDiv.appendChild(el);
+            });
+            state.right.forEach(p => {
+                const el = document.createElement('div');
+                el.className = 'passenger';
+                el.textContent = withEmoji(p);
+                el.onclick = () => selectPassenger(p, 'right');
+                if (state.boat.includes(p)) el.classList.add('selected');
+                rightDiv.appendChild(el);
+            });
+            // Render boat
+            const boatDiv = document.getElementById('boat-passengers');
+            boatDiv.innerHTML = '';
+            state.boat.forEach(p => {
+                const el = document.createElement('div');
+                el.className = 'boat-passenger';
+                el.textContent = withEmoji(p);
+                el.onclick = () => deselectPassenger(p);
+                boatDiv.appendChild(el);
+            });
+            // Move boat visually
+            const boat = document.getElementById('boat');
+            boat.style.left = state.boatOnLeft ? '25%' : '75%';
+            // Update step count
+            document.getElementById('step-count').textContent = state.stepCount;
+            // Render steps table
+            const table = document.getElementById('steps-table');
+            table.innerHTML = '';
+            state.steps.forEach((step, i) => {
+                const tr = document.createElement('tr');
+                const leftStr = step.left.map(withEmoji).join(', ');
+                const boatStr = step.boat.map(withEmoji).join(', ');
+                const rightStr = step.right.map(withEmoji).join(', ');
+                tr.innerHTML = `<td>${i+1}</td><td>${leftStr}</td><td>${boatStr}</td><td>${rightStr}</td>`;
+                table.appendChild(tr);
+            });
+        }
+
+        function selectPassenger(name, bank) {
+            if (!LEVELS[currentLevel].canSelect(name, bank, state)) return;
+            state.boat.push(name);
+            state[bank] = state[bank].filter(p => p !== name);
+            render();
+        }
+
+        function deselectPassenger(name) {
+            // Remove from boat, put back to current bank
+            if (state.boatOnLeft) {
+                state.left.push(name);
+            } else {
+                state.right.push(name);
+            }
+            state.boat = state.boat.filter(p => p !== name);
+            render();
+        }
+
+        function moveBoat() {
+            // Must have an adult in boat
+            const mustHave = LEVELS[currentLevel].mustHave;
+            if (!state.boat.some(p => mustHave.includes(p))) {
+                alert('Only an adult can drive the boat!');
+                return;
+            }
+            if (state.boat.length > 2) {
+                alert('The boat can only take 2 passengers!');
+                return;
+            }
+            // Move boat
+            state.boatOnLeft = !state.boatOnLeft;
+            // Disembark
+            if (state.boatOnLeft) {
+                state.left = state.left.concat(state.boat);
+            } else {
+                state.right = state.right.concat(state.boat);
+            }
+            // Save step
+            state.stepCount++;
+            state.steps.push({
+                left: [...state.left],
+                boat: [...state.boat],
+                right: [...state.right]
+            });
+            // Clear boat
+            state.boat = [];
+            render();
+            // Check for game over or rule violations
+            setTimeout(() => LEVELS[currentLevel].checkRules(state, resetGame), 100);
+        }
+
+        function resetGame() {
+            state = JSON.parse(JSON.stringify(LEVELS[currentLevel].initial));
+            render();
+        }
+
+        document.getElementById('move-btn').onclick = moveBoat;
+        document.getElementById('reset-btn').onclick = resetGame;
+        document.getElementById('level-select').onchange = function() {
+            currentLevel = parseInt(this.value);
+            resetGame();
+        };
+
+        // Initial render
+        render();
+    </script>
+</body>
+</html>
